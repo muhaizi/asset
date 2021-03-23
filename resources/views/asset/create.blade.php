@@ -5,20 +5,21 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
+                  
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('home') }}">Halaman Utama</a></li>
                     <li class="breadcrumb-item"><a href="{{ route('asset.index') }}">Senarai Aset</a></li>
                     <li class="breadcrumb-item active">Tambah Aset</li>
                   </ol>
+
                 <div class="card">
                     <div class="card-header">{{ __('Pendaftaran Aset') }}</div>
                     <div class="card-body">
                         <form action="{{ route('asset.store') }}" method="POST" enctype="multipart/form-data">
                           @csrf
-                          
                           <div class="form-row">
                                 <div class="col-md-9 mb-3">
-                                    <label for="validationDefault01">Premis</label>
+                                    <label for="premise_id">Premis</label>
                                     <div class="input-group mb-3">
                                       <select name="premise_id" id="premise_id"
                                       class="form-control @error('premise_id') is-invalid @enderror" autofocus>
@@ -32,7 +33,7 @@
                                         <a href="#" 
                                         data-toggle="modal"
                                         data-target="#modal-add-premise"
-                                        class="btn btn-secondary">
+                                        class="btn btn-outline-secondary">
                                         Tambah Premis</a>
                                       </div>
                                       @error('premise_id')
@@ -41,11 +42,10 @@
                                       </span>
                                       @enderror
                                     </div>
-                                   
                                 </div>
                                 <div class="col-md-3 mb-3">
-                                    <label for="validationDefault02">Tarikh Aset</label>
-                                    <input type="text" name="deadline" id="deadline" class="form-control @error('deadline') is-invalid @enderror">
+                                    <label for="deadline">Tarikh Aset</label>
+                                    <input type="text" name="deadline" id="deadline" autocomplete="off" class="form-control @error('deadline') is-invalid @enderror">
                                         @error('deadline')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -89,7 +89,7 @@
                                 <label for="description" class="col-sm-2 col-form-label @error('keterangan') is-invalid @enderror">Keterangan</label>
                                 <div class="col-sm-10">
                                     <textarea name="description" cols=10 rows=4 class="form-control"
-                                        id="inputEmail3"></textarea>
+                                        id="description"></textarea>
                                         @error('ministry_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -100,7 +100,7 @@
                             <div class="form-group row">
                                 <label for="inputPassword3" class="col-sm-2 col-form-label ">Lampiran</label>
                                 <div class="col-sm-10">
-                                  <input type="file" name="attachment" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment" accept=".pdf,png">
+                                  <input type="file" name="attachment" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment" accept=".pdf,.png">
                                   @error('attachment')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -115,14 +115,14 @@
                                         <input class="form-check-input" type="radio" name="status" id="status1"
                                             value="1">
                                         <label class="form-check-label" for="status1">
-                                            First radio
+                                            Baru
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status2"
                                             value="2">
                                         <label class="form-check-label" for="status2">
-                                            Second radio
+                                            Diluluskan
                                         </label>
                                     </div>
                                     <div class="form-check disabled">
@@ -161,6 +161,8 @@
     $(document).ready(function() {
       $("#deadline").datepicker({
                 format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight:'TRUE',
                 endDate: "today",
        });
 

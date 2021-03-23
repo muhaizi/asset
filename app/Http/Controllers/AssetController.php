@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateAsset;
+use App\Http\Requests\StoreAsset;
 use App\Models\Asset;
 use App\Models\Ministry;
 use App\Models\Department;
 use App\Models\Premise;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class AssetController extends Controller
@@ -34,7 +37,7 @@ class AssetController extends Controller
         //dd(Auth::user()->can('create-asset'));
         $data = array();
 
-        $ministries = Ministry::all();
+        $ministries = Ministry::byRole($user)->get(); //using scope
         $data['ministries'] = $ministries;
 
         $asset = Asset::with('ministry')
@@ -42,17 +45,22 @@ class AssetController extends Controller
                 $query->where('name', 'LIKE', '%' . $name . '%');
             })
             ->when($request->deadline, function ($query, $deadline) {
-                $deadline =  Carbon::createFromFormat('d/m/Y', $deadline)->format('Y-m-d');
+                $deadline = Carbon::createFromFormat('d/m/Y', $deadline)->format('Y-m-d');
                 $query->where('deadline', $deadline);
             })
             ->when($request->ministry_id, function ($query, $ministry_id) {
                 $query->where('ministry_id', $ministry_id);
             })
-            ->paginate(3)->withQueryString();
+            ->when($user->hasRole('KAD'), function ($query, $ministry) {
+                $ministry = Auth()->user()->ministry_id;
+                $query->where('ministry_id', $ministry);
+            })
+            ->paginate(5)->withQueryString();
 
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
         $data['deadline'] = empty($request->deadline) ? '' : $request->deadline; 
+        $data['description'] = empty($request->description) ? '' : $request->description; 
         $data['pagination'] = $asset->isEmpty() ? 'Tiada rekod' : "Paparan ".$asset->firstItem()." hingga ".$asset->lastItem()." dari ".$asset->total();
         return view('asset.index', $data);
     }
@@ -65,6 +73,12 @@ class AssetController extends Controller
      */
     public function create()
     {
+
+        //authorization using Gate
+        abort_if(Gate::denies('asset:create'), 403);
+
+        //how to pass all col in table user
+        //dd(auth()->user()->ministry_id);
         $ministries = Ministry::all();
         $premises = Premise::all();
 
@@ -77,6 +91,13 @@ class AssetController extends Controller
 
     public function edit(Asset $asset)
     {
+
+        if (!auth()->user()->hasPermission('edit-asset')) {
+            return redirect()
+            ->route('asset.index')
+            ->withError('Invalid access');
+        }
+        
         $ministries = Ministry::all();
         $premises = Premise::all();
 
@@ -90,9 +111,13 @@ class AssetController extends Controller
 
     public function show(Asset $asset)
     {
-        //$contents = Storage::get('public/uploads/'.$asset->attachment);
+        $user = Auth::user();
+
+        //route model binding
         $data = array();
-        $data['asset'] = $asset;
+        //$data['asset'] = $asset;
+        $data['asset'] = $asset->load('map');
+        //dd($asset->map->lat);
         return view('asset.show', $data);
     }
 
@@ -107,6 +132,7 @@ class AssetController extends Controller
     
     public function store(CreateAsset $request)
     {
+
         $data = $request->except([
             '_token'
         ]);
@@ -129,16 +155,26 @@ class AssetController extends Controller
         
         $data['attachment'] = $fileNameToStore;
         $asset = Asset::create($data);
-
+        //$id generate next auto increment table Asset lastInsertedId()
         return redirect()
         ->route('asset.show',$asset->id)
         ->withSuccess('Asset has been added successfully.');
     }
-    public function update(Request $request, Asset $asset)
+    public function update(StoreAsset $request, Asset $asset)
     {
         $data = $request->except([
-            '_token', 'attachment'
+            '_token'
         ]);
+
+        if ($request->hasFile('attachment')) {
+            $filenameWithExt = $request->file('attachment')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('attachment')->getClientOriginalExtension();
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            $request->attachment->move(public_path('storage/uploads'), $fileNameToStore);
+
+            $data['attachment'] = $fileNameToStore;
+        }
 
         $asset->update($data);
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePremisesTable extends Migration
+class CreateAssetMapsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreatePremisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('premises', function (Blueprint $table) {
+        Schema::create('asset_maps', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->foreignId('asset_id')->nullable();
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreatePremisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('premises');
+        Schema::dropIfExists('asset_maps');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateAsset extends FormRequest
+class StoreAsset extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class CreateAsset extends FormRequest
             'ministry_id' => 'required',
             'amount' => 'required|numeric',
             'deadline' => 'required|date_format:d/m/Y',
-            'attachment' => 'required|max:10000|mimes:pdf,png'
+            'attachment' => 'exists:assets,attachment|max:10000|mimes:pdf,png'
         ];
     }
 
@@ -44,7 +44,7 @@ class CreateAsset extends FormRequest
             'ministry_id.required' => 'Ministry diperlukan',
             'deadline.required' => 'Tarikh is required',
             'deadline.date_format' => 'Format Tarikh anda mestilah dd/mm/YYYY',
-            'attachment.required' => 'Sila lampirkan 1 fail',
+            'attachment.exists' => 'Sila lampirkan 1 fail',
         ];
     }
 }

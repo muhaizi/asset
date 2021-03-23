@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="card">
                     @if ($message = Session::get('success'))
                     <div class="alert alert-success alert-block">
@@ -11,12 +11,6 @@
                             <strong>{{ $message }}</strong>
                     </div>
                     <hr>
-                    @endif
-                    @if ($message = Session::get('error'))
-                    <div class="alert alert-danger alert-block">
-                        <button type="button" class="close" data-dismiss="alert">×</button>	
-                            <strong>{{ $message }}</strong>
-                    </div>
                     @endif
                   
                     <div class="card-header d-flex justify-content-between align-items-center">{{ __('Senarai Aset') }}
@@ -73,10 +67,7 @@
                                         <td>{{ $curAset->description }}</td>
                                         <td>{{ $curAset->ministry->name }}</td>
                                         <td>{{ $curAset->deadline }}</td>
-                                        <td nowrap>
-                                        @permission('edit-asset')
-                                        <a class="btn" href="{{ route('asset.edit', [$curAset->id]) }}"><i class="fas fa-edit"></i></a>
-                                        @endpermission
+                                        <td nowrap><a class="btn" href="{{ route('asset.edit', [$curAset->id]) }}"><i class="fas fa-edit"></i></a>
                                         <a class="btn" href="{{ route('asset.show', [$curAset->id]) }}"><i class="fas fa-eye"></i></a></td>
                                     </tr>
                                 @endforeach
@@ -105,7 +96,6 @@
         $("#deadline").datepicker({
             format: 'dd/mm/yyyy',
             endDate: "today",
-            autoclose: true,
         });
     });
 </script>

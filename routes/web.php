@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\AssetMapController;
 use App\Http\Controllers\PremiseController;
+use App\Models\AssetMap;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +27,23 @@ Route::get('/picker', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('/asset', AssetController::class)->middleware('auth');
-Route::resource('/premise', PremiseController::class)->middleware('auth');
 
-//l8 AssetController::class
+Route::group(
+	[
+		'middleware' => ['auth'],
+	],
+	function() {
+        Route::resource('/asset', AssetController::class);
+        Route::resource('/premise', PremiseController::class);
+        Route::get('asset/{asset}/map', [AssetMapController::class, 'create'])->name('map.create');
+        Route::get('asset/{asset}/map/{map?}', [AssetMapController::class, 'show'])->name('map.show');
+        Route::post('asset/{asset}/map', [AssetMapController::class, 'store'])->name('map.store');
+        
+
+    }
+);
+
+//L8 AssetController::class
 //L7 AssetController
 
 Route::get('/demo', function () {

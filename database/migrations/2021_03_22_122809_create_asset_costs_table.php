@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePremisesTable extends Migration
+class CreateAssetCostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreatePremisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('premises', function (Blueprint $table) {
+        Schema::create('asset_costs', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->integer('asset_id')->nullable();
+            $table->string('sumber')->nullable();
+            $table->year('tahun');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreatePremisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('premises');
+        Schema::dropIfExists('asset_costs');
     }
 }

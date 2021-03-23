@@ -11,6 +11,11 @@
                         <strong>{{ $message }}</strong>
                 </div>
                 @endif
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Halaman Utama</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('asset.index') }}">Senarai Aset</a></li>
+                    <li class="breadcrumb-item active">Paparan Aset</li>
+                  </ol>
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">{{ __('Paparan Aset') }}
                         <div class="dropdown">
@@ -18,7 +23,7 @@
                               Maklumat Aset
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="#">Asas</a>
+                              <a class="dropdown-item" href="{{route('map.create',[$asset->id])}}">Asas</a>
                               <a class="dropdown-item" href="#">Kos</a>
                               <a class="dropdown-item" href="#">Status</a>
                               <a class="dropdown-item" href="#">Tanah</a>
@@ -49,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="validationDefault04">Kementerian</label>
+                                    <label for="validationDefault04"><strong>Kementerian</strong></label>
                                     <div class="input-group mb-3">
                                         {{$asset->ministry->name}}
                                       </div>

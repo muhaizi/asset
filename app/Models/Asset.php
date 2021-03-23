@@ -10,8 +10,9 @@ class Asset extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
-    
+    protected $guarded = []; //inverse fillable
+
+    //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M
     public function ministry()
     {
@@ -21,8 +22,12 @@ class Asset extends Model
     {
         return $this->hasOne(Premise::class, 'id', 'premise_id')->withDefault(['name' => 'Tiada Premis']);
     }
+    public function map()
+    {
+        return $this->hasOne(AssetMap::class, 'asset_id', 'id')->withDefault(['name' => 'Tiada Map']);
+    }
 
-    public function setDeadlineAttribute($value)
+    public function setDeadlineAttribute($value)//accessors && mutator
     {
         $this->attributes['deadline'] = empty($value) ? null : Carbon::createFromFormat('d/m/Y', $value)->format('Y-m-d');
     }

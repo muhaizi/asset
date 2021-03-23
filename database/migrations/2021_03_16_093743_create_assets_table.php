@@ -25,7 +25,8 @@ class CreateAssetsTable extends Migration
         Schema::create('assets', function (Blueprint $table) {
             $table->id();
             $table->integer('ministry_id')->nullable();
-            $table->text('attachment');
+            $table->integer('premise_id')->nullable();
+            $table->text('attachment')->comment('allow pdf, png');
             $table->text('description');
             $table->tinyInteger('status')->nullable(); //1,2,3
             $table->date('deadline'); 
