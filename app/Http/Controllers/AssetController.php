@@ -51,6 +51,7 @@ class AssetController extends Controller
             ->when($request->ministry_id, function ($query, $ministry_id) {
                 $query->where('ministry_id', $ministry_id);
             })
+            //to filter by ministry if role is KAD
             ->when($user->hasRole('KAD'), function ($query, $ministry) {
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
