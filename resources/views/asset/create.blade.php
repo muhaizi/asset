@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="deadline">Tarikh Aset</label>
-                                    <input type="text" name="deadline" id="deadline" autocomplete="off" class="form-control @error('deadline') is-invalid @enderror">
+                                    <input type="text" name="deadline" id="deadline" value="{{old('deadline')}}" autocomplete="off" class="form-control @error('deadline') is-invalid @enderror">
                                         @error('deadline')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>

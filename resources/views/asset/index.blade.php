@@ -59,6 +59,7 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <th scope="col"><input type="checkbox" id="checkAll" name="checkAll"></th>
                                     <th scope="col">#</th>
                                     <th scope="col">Keterangan</th>
                                     <th scope="col">Kementerian</th>
@@ -69,6 +70,7 @@
                             <tbody>
                                 @foreach ($asset as $curAset)
                                     <tr>
+                                        <th><input name='id[]' class="asset" type="checkbox" id="checkItem" value="{{$curAset->id}}"></th>
                                         <th scope="row">{{ ($asset->currentpage()-1) * $asset->perpage() + $loop->index + 1  }}.</th>
                                         <td>{{ $curAset->description }}</td>
                                         <td>{{ $curAset->ministry->name }}</td>
@@ -83,6 +85,15 @@
                             </tbody>
                         </table>
 
+                        <div class="my-2">
+                            @if(!$asset->isEmpty())
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a title="Delete" id="btn-delete" data-placement="top" data-toggle="modal" data-target="#modal-deleteall" class="btn btn-danger btn-sm btn-delete" href="#"><i class="fas fa-trash mr-2"></i>Hapus</a>
+                                <a title="Approved" data-placement="top" data-toggle="modal" data-target="#modal-approveall" class="btn btn-primary btn-sm btn-pengesahan" href="#"><i class="fas fa-check mr-2"></i>Pengesahan</a>
+                              </div>
+                            @endif
+                        </div>
+                    </form>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                   {{ $pagination }}
@@ -100,6 +111,8 @@
     </div>
     </div>
     </div>
+    @include('asset.deleteall')
+    @include('asset.updateall')
     <script type='text/javascript'>
     $(document).ready(function() {
         $("#deadline").datepicker({
@@ -107,6 +120,50 @@
             endDate: "today",
             autoclose: true,
         });
+
+        $(".btn-delete").addClass('disabled');
+        $(".btn-pengesahan").addClass('disabled');
+    });
+
+    $("#checkAll").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+
+        // if ($(".asset").length > 0) {
+        if($('input[name=checkAll]').is(':checked')){
+
+             $(".btn-delete").removeClass('disabled');
+             $(".btn-pengesahan").removeClass('disabled');
+        }else{
+            $(".btn-delete").addClass('disabled');
+            $(".btn-pengesahan").addClass('disabled');
+        }
+
+   
+    });
+    
+    var deleteAssetUrl = '{{ route("asset.deleteall") }}';
+    
+    $(document.body).on('click', '.btn-delete', function(){
+        var id = []; // initialize empty array 
+        $(".asset:checked").each(function(){
+            id.push($(this).val());
+        });
+        var newDeleteAssetUrl = deleteAssetUrl+'/'+id;
+        //console.log(newDeleteAssetUrl);
+        $('#form-deleteall').attr('action', newDeleteAssetUrl);
+    });
+
+    var updateAssetUrl = '{{ route("asset.updateall") }}';
+    
+    $(document.body).on('click', '.btn-pengesahan', function(){
+        var assetId = []; // initialize empty array 
+        $(".asset:checked").each(function(){
+            assetId.push($(this).val());
+        });
+
+        var newUpdateAssetUrl = updateAssetUrl+'/'+assetId;
+        //console.log(newUpdateAssetUrl);
+        $('#form-updateall').attr('action', newUpdateAssetUrl);
     });
 </script>
 @endsection

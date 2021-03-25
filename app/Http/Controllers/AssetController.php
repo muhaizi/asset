@@ -12,6 +12,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -57,7 +58,7 @@ class AssetController extends Controller
                 $query->where('ministry_id', $ministry);
             })
             ->paginate(5)->withQueryString();
-
+            //withTrashed()->
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
         $data['deadline'] = empty($request->deadline) ? '' : $request->deadline; 
@@ -65,6 +66,8 @@ class AssetController extends Controller
         $data['pagination'] = $asset->isEmpty() ? 'Tiada rekod' : "Paparan ".$asset->firstItem()." hingga ".$asset->lastItem()." dari ".$asset->total();
         return view('asset.index', $data);
     }
+
+    
 
      /**
      * Show the form for creating a new resource.
@@ -121,15 +124,32 @@ class AssetController extends Controller
         //dd($asset->map->lat);
         return view('asset.show', $data);
     }
+    public function deleteall(Request $request)
+    {
+        $ids = explode('/',$request->getRequestUri());
+        DB::table("assets")->whereIn('id',explode(",",$ids[3]))->delete();
+        return redirect()->route('asset.index')->withSuccess('Assets Deleted successfully');
+    }
+    
+    public function approveall(Request $request)
+    {
+        $ids = explode('/',$request->getRequestUri());
+        DB::table("assets")->whereIn('id',explode(",",$ids[3]))->update([ 'status' => 3]);
+        return redirect()->route('asset.index')->withSuccess('Assets Deleted successfully');
+    }
 
     public function destroy(Asset $asset)
     {
-        $asset->delete();
 
+        //$asset->delete();
+        $asset->update(['deleted_at' => date('Y-m-d')]);
+        
         return redirect()
-                ->route('asset.index')
-                ->withSuccess('Asset has been deleted.');
+        ->route('asset.index')
+        ->withSuccess('Asset has been deleted.');
     }
+    
+   
     
     public function store(CreateAsset $request)
     {

@@ -33,7 +33,10 @@ Route::group(
 		'middleware' => ['auth'],
 	],
 	function() {
+        Route::delete('/asset/deleteall/{asset?}', [AssetController::class, 'deleteall'])->name('asset.deleteall');
+        Route::post('/asset/updateall/{asset?}', [AssetController::class, 'approveall'])->name('asset.updateall');
         Route::resource('/asset', AssetController::class);
+
         Route::resource('/premise', PremiseController::class);
         Route::get('asset/{asset}/map', [AssetMapController::class, 'create'])->name('map.create');
         Route::get('asset/{asset}/map/{map?}', [AssetMapController::class, 'show'])->name('map.show');
