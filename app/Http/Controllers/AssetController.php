@@ -136,7 +136,7 @@ class AssetController extends Controller
     {
         $ids = explode('/',$request->getRequestUri());
         DB::table("assets")->whereIn('id',explode(",",$ids[3]))->update([ 'status' => 3]);
-        return redirect()->route('asset.index')->withSuccess('Assets Deleted successfully');
+        return redirect()->route('asset.index')->withSuccess('Assets Approval is successful-ling');
     }
 
     public function destroy(Asset $asset)

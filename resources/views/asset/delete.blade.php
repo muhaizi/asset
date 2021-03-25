@@ -14,7 +14,7 @@
               <p>Are you sure to delete this asset?</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Kembali</button>
+              <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Kembali</button>
               <button type="submit" class="btn btn-danger"><i class='fas fa-trash'></i> Hapus</button>
             </div>
           </div>

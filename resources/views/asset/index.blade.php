@@ -4,13 +4,11 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <div class="card">
-                    @if ($message = Session::get('success'))
+                @if ($message = Session::get('success'))
                     <div class="alert alert-success alert-block">
                         <button type="button" class="close" data-dismiss="alert">×</button>	
                             <strong>{{ $message }}</strong>
                     </div>
-                    <hr>
                     @endif
                     @if ($message = Session::get('error'))
                     <div class="alert alert-danger alert-block">
@@ -18,6 +16,8 @@
                             <strong>{{ $message }}</strong>
                     </div>
                     @endif
+                <div class="card">
+                    
                   
                     <div class="card-header d-flex justify-content-between align-items-center">{{ __('Senarai Aset') }}
                     @permission('create-asset')
@@ -44,7 +44,7 @@
                         <div class="form-group row">
                             <label for="inputPassword3" class="col-sm-2 col-form-label">Tarikh</label>
                             <div class="col-md-4">
-                                <input type="text" name="deadline" id="deadline" class="form-control"
+                                <input type="text" name="deadline" id="deadline" class="form-control" autocomplete="off"
                                 value="{{old('deadline', $deadline)}}">
                             </div>
                         </div>
@@ -56,6 +56,7 @@
                             </div>
                         </div>
                         </form>
+                        <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -84,7 +85,7 @@
                                 @endforeach
                             </tbody>
                         </table>
-
+                    </div>
                         <div class="my-2">
                             @if(!$asset->isEmpty())
                             <div class="btn-group" role="group" aria-label="Basic example">
@@ -130,15 +131,12 @@
 
         // if ($(".asset").length > 0) {
         if($('input[name=checkAll]').is(':checked')){
-
              $(".btn-delete").removeClass('disabled');
              $(".btn-pengesahan").removeClass('disabled');
         }else{
             $(".btn-delete").addClass('disabled');
             $(".btn-pengesahan").addClass('disabled');
         }
-
-   
     });
     
     var deleteAssetUrl = '{{ route("asset.deleteall") }}';

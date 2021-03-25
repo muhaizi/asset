@@ -26,11 +26,11 @@ class AssetMapController extends Controller
     public function create(Asset $asset)
     {
         //dd($asset->map()->get()->isEmpty());
-        if($asset->map()->get()->isEmpty()){
+        if($asset->maps()->get()->isEmpty()){
             return view('asset.map.create', compact('asset'));
         }else{
             return redirect()
-                ->route('map.show',[$asset->id, $asset->map->id]);
+                ->route('map.show',[$asset->id, $asset->maps->id]);
         }
 
 
