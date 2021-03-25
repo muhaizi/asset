@@ -23,6 +23,10 @@ class AssetController extends Controller
         //$this->middleware('auth');
     }
 
+    public function exportexcel(Request $request){
+
+        dd($request);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -37,6 +41,7 @@ class AssetController extends Controller
         //dd(Auth::user()->hasPermission('create-asset')); //pa cache:clear
         //dd(Auth::user()->can('create-asset'));
         $data = array();
+        $excel = $request->excel;
 
         $ministries = Ministry::byRole($user)->get(); //using scope
         $data['ministries'] = $ministries;
@@ -57,14 +62,19 @@ class AssetController extends Controller
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
             })
-            ->paginate(1)->withQueryString();
+            ->paginate(($excel)?100000:10)->withQueryString();
             //withTrashed()->
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
         $data['deadline'] = empty($request->deadline) ? '' : $request->deadline; 
         $data['description'] = empty($request->description) ? '' : $request->description; 
         $data['pagination'] = $asset->isEmpty() ? 'Tiada rekod' : "Paparan ".$asset->firstItem()." hingga ".$asset->lastItem()." dari ".$asset->total();
-        return view('asset.index', $data);
+
+        if($excel){
+            return view('asset.export', $data);
+        }else{
+            return view('asset.index', $data);
+        }
     }
 
     
@@ -119,7 +129,6 @@ class AssetController extends Controller
 
         //route model binding
         $data = array();
-        //$data['asset'] = $asset;
         $data['asset'] = $asset->load('maps');
         //dd($asset->map->lat);
         return view('asset.show', $data);

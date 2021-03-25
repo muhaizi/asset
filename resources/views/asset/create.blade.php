@@ -60,7 +60,7 @@
                                       <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">MYR</span>
                                       </div>
-                                      <input type="text" name="amount" id=amount maxlength="6" class="form-control" placeholder="0.00" aria-label="Username" aria-describedby="basic-addon1">
+                                      <input type="text" name="amount" value="{{old('amount')}}" id=amount maxlength="6" class="form-control" placeholder="0.00" aria-label="Username" aria-describedby="basic-addon1">
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -89,7 +89,7 @@
                                 <label for="description" class="col-sm-2 col-form-label @error('keterangan') is-invalid @enderror">Keterangan</label>
                                 <div class="col-sm-10">
                                     <textarea name="description" cols=10 rows=4 class="form-control"
-                                        id="description"></textarea>
+                                        id="description">{{old('description')}}</textarea>
                                         @error('ministry_id')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -97,6 +97,7 @@
                                         @enderror
                                 </div>
                             </div>
+                            <!--The value of a file input cannot be retained once it’s submitted and that’s the default behavior of the browser.-->
                             <div class="form-group row">
                                 <label for="inputPassword3" class="col-sm-2 col-form-label ">Lampiran</label>
                                 <div class="col-sm-10">
@@ -113,14 +114,14 @@
                                 <div class="col-sm-10">
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status1"
-                                            value="1">
+                                            value="1" {{ old("status") == '1' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="status1">
                                             Baru
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="status" id="status2"
-                                            value="2">
+                                            value="2" {{ old("status") == '2' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="status2">
                                             Diluluskan
                                         </label>
@@ -137,7 +138,7 @@
                             <div class="form-group row">
                                 <div class="col-sm-10 offset-sm-2">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                        <input class="form-check-input" type="checkbox" name="checkKnowledge" id="gridCheck1" value="1" {{ old("checkKnowledge") == '1' ? 'checked' : '' }}>
                                         <label class="form-check-label" for="gridCheck1">
                                             This is to acknowledge
                                         </label>
