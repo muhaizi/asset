@@ -23,7 +23,7 @@ class Asset extends Model
     {
         return $this->hasOne(Premise::class, 'id', 'premise_id')->withDefault(['name' => 'Tiada Premis']);
     }
-    public function map()
+    public function maps()
     {
         return $this->hasOne(AssetMap::class, 'asset_id', 'id')->withDefault(['name' => 'Tiada Map']);
     }

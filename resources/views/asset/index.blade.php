@@ -63,7 +63,7 @@
                                     <th scope="col">#</th>
                                     <th scope="col">Keterangan</th>
                                     <th scope="col">Kementerian</th>
-                                    <th scope="col">Tarikh Aset</th>
+                                    <th scope="col">{{__('asset.tarikh')}}</th>
                                     <th scope="col">Tindakan</th>
                                 </tr>
                             </thead>

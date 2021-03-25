@@ -57,7 +57,7 @@ class AssetController extends Controller
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
             })
-            ->paginate(5)->withQueryString();
+            ->paginate(1)->withQueryString();
             //withTrashed()->
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
@@ -120,10 +120,11 @@ class AssetController extends Controller
         //route model binding
         $data = array();
         //$data['asset'] = $asset;
-        $data['asset'] = $asset->load('map');
+        $data['asset'] = $asset->load('maps');
         //dd($asset->map->lat);
         return view('asset.show', $data);
     }
+
     public function deleteall(Request $request)
     {
         $ids = explode('/',$request->getRequestUri());

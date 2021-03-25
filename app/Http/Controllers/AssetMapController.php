@@ -65,6 +65,7 @@ class AssetMapController extends Controller
      */
     public function show(Asset $asset, AssetMap $map)
     {
+        
         return view('asset.map.show', compact('asset', 'map'));
     }
 

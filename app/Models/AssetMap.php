@@ -10,5 +10,11 @@ class AssetMap extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function asset()
+    {
+        return $this->belongsTo(Asset::class);
+    }
+
     
 }

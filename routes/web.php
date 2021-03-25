@@ -39,7 +39,7 @@ Route::group(
 
         Route::resource('/premise', PremiseController::class);
         Route::get('asset/{asset}/map', [AssetMapController::class, 'create'])->name('map.create');
-        Route::get('asset/{asset}/map/{map?}', [AssetMapController::class, 'show'])->name('map.show');
+        Route::get('asset/{asset}/map/{map:id}', [AssetMapController::class, 'show'])->name('map.show');
         Route::post('asset/{asset}/map', [AssetMapController::class, 'store'])->name('map.store');
         
 
