@@ -27,6 +27,10 @@ class Asset extends Model
     {
         return $this->hasOne(AssetMap::class, 'asset_id', 'id')->withDefault(['name' => 'Tiada Map']);
     }
+    public function costs()
+    {
+        return $this->hasOne(AssetCost::class, 'asset_id', 'id')->withDefault(['name' => 'Tiada Kos']);
+    }
 
     public function setDeadlineAttribute($value)//accessors && mutator
     {

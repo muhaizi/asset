@@ -2,6 +2,7 @@
 
 @section('content')
 
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -18,18 +19,7 @@
                   </ol>
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">{{ __('Paparan Aset') }}
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              Maklumat Aset
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                              <a class="dropdown-item" href="{{route('map.create',[$asset->id])}}">Asas</a>
-                              <a class="dropdown-item" href="#">Kos</a>
-                              <a class="dropdown-item" href="#">Status</a>
-                              <a class="dropdown-item" href="#">Tanah</a>
-                              <a class="dropdown-item" href="#">Gambar & Fail</a>
-                            </div>
-                          </div>
+                       @include('asset/menu')
                     </div>
                     <div class="card-body">
                           <div class="form-row">
