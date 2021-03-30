@@ -62,6 +62,7 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            //This way the database connection will also obey an UTC setting and it'll prevent from adding unwanted offsets.
         ],
 
         'pgsql' => [
