@@ -44,7 +44,8 @@ class AssetController extends Controller
         $ministries = Ministry::byRole($user)->get(); //using local scope
         $data['ministries'] = $ministries;
 
-        $asset = Asset::with('ministry')
+        //https://laravel.com/docs/8.x/eloquent-relationships#eager-loading
+        $asset = Asset::with('ministry')->withSum('costs', 'sumber')->withCount('costs')
             ->when($request->name, function ($query, $name) {
                 $query->where('name', 'LIKE', '%' . $name . '%');
             })
@@ -70,6 +71,7 @@ class AssetController extends Controller
         $data['description'] = empty($request->description) ? '' : $request->description; 
         $data['pagination'] = $asset->isEmpty() ? 'Tiada rekod' : "Paparan ".$asset->firstItem()." hingga ".$asset->lastItem()." dari ".$asset->total();
         $data['type'] = $type;
+        //dd($data);
         if($type =='excel'){
             return view('asset.export', $data);
         }elseif($type == 'word'){
@@ -130,8 +132,13 @@ class AssetController extends Controller
 
     public function show(Asset $asset)
     {
+        dd('here');
         $user = Auth::user();
         //route model binding
+
+        if($asset->trashed()){
+            dd('here');
+        }
         $data = array();
         $data['asset'] = $asset->load('maps');
         //dd($asset->map->lat);
@@ -155,8 +162,8 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
 
-        //$asset->delete(); totaldestroy
-        $asset->update(['deleted_at' => date('Y-m-d H:i:s')]); //using softdelete
+        $asset->delete(); //totaldestroy
+        //$asset->update(['deleted_at' => date('Y-m-d H:i:s')]); //using softdelete
         
         return redirect()
         ->route('asset.index')

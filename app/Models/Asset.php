@@ -16,7 +16,11 @@ class Asset extends Model
 
     protected $guarded = []; //inverse fillable
     protected $count = ['ministry_id'];
-    public $sortable = ['description', 'ministry_id', 'deadline'];
+    //protected $with = []; always eager load , exclude $books = Book::without('author')->get();
+    protected $appends = ['costs_sum_sumber'];
+    public $sortable = ['description', 'ministry_id', 'deadline', 'costs_sum_sumber'];
+
+
 
     //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M
@@ -34,7 +38,7 @@ class Asset extends Model
     }
     public function costs()
     {
-        return $this->hasOne(AssetCost::class, 'asset_id', 'id')->withDefault(['name' => 'Tiada Kos']);
+        return $this->hasMany(AssetCost::class, 'asset_id', 'id');
     }
 
     public function setDeadlineAttribute($value)//accessors && mutator
@@ -46,4 +50,15 @@ class Asset extends Model
     {
         return is_null($value) || empty($value) ? '' : Carbon::parse($value)->format('d/m/Y');
     }
+
+    public function getDescriptionAttribute($value)
+    {
+        return nl2br($value);
+    }
+
+    public function getCostsSumSumberAttribute($value)
+    {
+        return 'RM'.number_format($value,2);
+    }
+
 }

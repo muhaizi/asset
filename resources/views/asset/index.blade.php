@@ -68,6 +68,7 @@
                                     <th scope="col">@sortablelink('description', 'Keterangan')</th>
                                     <th scope="col">@sortablelink('ministry_id', 'Kementerian') {!!$iconSuccess!!}</th>
                                     <th scope="col">@sortablelink('deadline', __('asset.tarikh'))</th>
+                                    <th scope="col">Total Kos</th>
                                     <th scope="col">Tindakan</th>
                                 </tr>
                             </thead>
@@ -77,9 +78,10 @@
                                         <th><input name='id' onclick="doEnableInput(this.checked)" class="asset" 
                                             type="checkbox" id="checkItem" value="{{$curAset->id}}"></th>
                                         <th scope="row">{{ ($asset->currentpage()-1) * $asset->perpage() + $loop->index + 1  }}.</th>
-                                        <td>{{ $curAset->description }}</td>
+                                        <td>{!! $curAset->description !!}</td>
                                         <td>{{ $curAset->ministry->name }}</td>
                                         <td>{{ $curAset->deadline }}</td>
+                                        <td>{{ $curAset->costs_sum_sumber }} ({{$curAset->costs_count}})</td>
                                         <td nowrap>
                                         @permission('edit-asset')
                                         <a class="btn" href="{{ route('asset.edit', [$curAset->id]) }}"><i class="fas fa-edit"></i></a>
