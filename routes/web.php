@@ -34,7 +34,7 @@ Route::group(
 	],
 	function() {
         Route::delete('/asset/deleteall/{asset?}', [AssetController::class, 'deleteall'])->name('asset.deleteall');
-        Route::post('/asset/updateall/{asset?}', [AssetController::class, 'approveall'])->name('asset.updateall');
+        Route::post('/asset/updateall/{asset?}', [AssetController::class, 'approveall'])->name('asset.pengesahan');
         Route::resource('/asset', AssetController::class);
 
         Route::resource('/premise', PremiseController::class);
@@ -47,7 +47,7 @@ Route::group(
 );
 
 //L8 AssetController::class
-//L7 AssetController
+//L7 AssetController@deleteall
 
 Route::get('/demo', function () {
     $user = App\Models\User::with('ministry')->first();//eager load + performance wise better (using IN()) compared to lazy loading N+1 queries

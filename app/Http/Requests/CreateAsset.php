@@ -40,9 +40,9 @@ class CreateAsset extends FormRequest
     public function messages()
     {
         return [
-            'premise_id.required' => ':ATTRIBUTE is required',
+            'premise_id.required' => 'Pilih satu premis ',
             'ministry_id.required' => ':Attribute diperlukan',
-            'deadline.required' => ':Attribute is required',
+            'deadline.required' => ':ATTRIBUTE is required',
             'deadline.date_format' => 'Format :attribute anda mestilah :format',
             'attachment.required' => 'Sila lampirkan 1 :attribute',
         ];

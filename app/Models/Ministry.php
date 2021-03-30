@@ -19,10 +19,11 @@ class Ministry extends Model
         return $this->belongsTo(Asset::class);
     }
 
-    public function scopeByRole($query, $user)
+    public function scopeByRole($query, $user) //local scope
     {
         if($user->hasRole('KAD')){
             return $query->where('id', $user->ministry_id);
         }
+
     }
 }

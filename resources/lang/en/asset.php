@@ -4,6 +4,6 @@ return [
 
     'keterangan' => 'Description',
     'kementerian' => 'Ministry',
-    'tarikh' => 'Asset Date',
+    'tarikh' => 'Date',
 
 ];

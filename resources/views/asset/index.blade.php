@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $iconSuccess = "<i class=\"fas fa-check\"></i>";
+@endphp
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -62,16 +65,17 @@
                                 <tr>
                                     <th scope="col"><input type="checkbox" id="checkAll" name="checkAll"></th>
                                     <th scope="col">#</th>
-                                    <th scope="col">Keterangan</th>
-                                    <th scope="col">Kementerian</th>
-                                    <th scope="col">{{__('asset.tarikh')}}</th>
+                                    <th scope="col">@sortablelink('description', 'Keterangan')</th>
+                                    <th scope="col">@sortablelink('ministry_id', 'Kementerian') {!!$iconSuccess!!}</th>
+                                    <th scope="col">@sortablelink('deadline', __('asset.tarikh'))</th>
                                     <th scope="col">Tindakan</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($asset as $curAset)
                                     <tr id="trchk_{{$curAset->id}}">
-                                        <th><input name='id' onclick="doEnableInput(this.checked)" class="asset" type="checkbox" id="checkItem" value="{{$curAset->id}}"></th>
+                                        <th><input name='id' onclick="doEnableInput(this.checked)" class="asset" 
+                                            type="checkbox" id="checkItem" value="{{$curAset->id}}"></th>
                                         <th scope="row">{{ ($asset->currentpage()-1) * $asset->perpage() + $loop->index + 1  }}.</th>
                                         <td>{{ $curAset->description }}</td>
                                         <td>{{ $curAset->ministry->name }}</td>
@@ -91,7 +95,9 @@
                             <div class="btn-group" role="group" aria-label="Basic example">
                                 <a title="Delete" id="btn-delete" data-placement="top" data-toggle="modal" data-target="#modal-deleteall" class="btn btn-danger btn-sm btn-delete" href="#"><i class="fas fa-trash mr-2"></i>Hapus</a>
                                 <a title="Approved" data-placement="top" data-toggle="modal" data-target="#modal-approveall" class="btn btn-primary btn-sm btn-pengesahan" href="#"><i class="fas fa-check mr-2"></i>Pengesahan</a>
-                                <a class="btn btn-success btn-sm btn-print" target="_blank" href="{{route('asset.index', ['ministry_id'=> $ministry, 'deadline' => $deadline, 'excel'=>1])}}"><i class="fa fa-file-excel-o mr-2"></i>Excel</a>
+                                <a class="btn btn-success btn-sm btn-print" target="_blank" href="{{route('asset.index', ['ministry_id'=> $ministry, 'deadline' => $deadline, 'type'=>'excel'])}}"><i class="fa fa-file-excel-o mr-2"></i>Excel</a>
+                                <a class="btn btn-primary btn-sm btn-print" target="_blank" href="{{route('asset.index', ['ministry_id'=> $ministry, 'deadline' => $deadline, 'type'=>'word'])}}"><i class="fa fa-file-word mr-2"></i>Word</a>
+                                <a class="btn btn-danger btn-sm btn-print" target="_blank" href="{{route('asset.index', ['ministry_id'=> $ministry, 'deadline' => $deadline, 'type'=>'pdf'])}}"><i class="fas fa-file-pdf mr-2"></i>PDF</a>
                               </div>
                             @endif
                         </div>
@@ -117,16 +123,14 @@
     @include('asset.updateall')
     <script type='text/javascript'>
     $(document).ready(function() {
-        $("#deadline").datepicker({
+        $("#deadline").datepicker({ //id
             format: 'dd/mm/yyyy',
             endDate: "today",
             autoclose: true,
         });
 
-        $(".btn-delete").addClass('disabled');
+        $(".btn-delete").addClass('disabled'); //class
         $(".btn-pengesahan").addClass('disabled');
-
-     
     });
 
     $("#checkAll").click(function () {
@@ -171,14 +175,14 @@
     $(document.body).on('click', '.btn-delete', function(){
         var id = []; // initialize empty array 
         $(".asset:checked").each(function(){
-            id.push($(this).val());
+            id.push($(this).val()); //19,20,21
         });
         var newDeleteAssetUrl = deleteAssetUrl+'/'+id;
-        console.log(newDeleteAssetUrl);
+        //console.log(newDeleteAssetUrl);
         $('#form-deleteall').attr('action', newDeleteAssetUrl);
     });
 
-    var updateAssetUrl = '{{ route("asset.updateall") }}';
+    var updateAssetUrl = '{{ route("asset.pengesahan") }}';
     
     $(document.body).on('click', '.btn-pengesahan', function(){
         var assetId = []; // initialize empty array 

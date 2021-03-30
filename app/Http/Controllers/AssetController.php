@@ -9,6 +9,7 @@ use App\Models\Ministry;
 use App\Models\Department;
 use App\Models\Premise;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade as PDF;  //change to this from Barryvdh\DomPDF\PDF
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,6 @@ class AssetController extends Controller
         //$this->middleware('auth');
     }
 
-    public function exportexcel(Request $request){
-
-        dd($request);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -34,16 +31,17 @@ class AssetController extends Controller
      */
     public function index(Request $request)
     {
-        //dd(auth()->user()->role);
+        //dd(auth()->user()->role
         $user = Auth::user();
+        //dd(Auth::user()->roles[0]->display_name); //dapatkan role
         //$role = Auth::user()->roles[0]->id;
         //$role = Auth::user()->roles();
         //dd(Auth::user()->hasPermission('create-asset')); //pa cache:clear
         //dd(Auth::user()->can('create-asset'));
         $data = array();
-        $excel = $request->excel;
+        $type = $request->type;
 
-        $ministries = Ministry::byRole($user)->get(); //using scope
+        $ministries = Ministry::byRole($user)->get(); //using local scope
         $data['ministries'] = $ministries;
 
         $asset = Asset::with('ministry')
@@ -55,29 +53,35 @@ class AssetController extends Controller
                 $query->where('deadline', $deadline);
             })
             ->when($request->ministry_id, function ($query, $ministry_id) {
-                $query->where('ministry_id', $ministry_id);
+                    $query->where('ministry_id', $ministry_id);
+                // business logic
             })
             //to filter by ministry if role is KAD
+            //hasRole('KAD')
             ->when($user->hasRole('KAD'), function ($query, $ministry) {
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
             })
-            ->paginate(($excel)?100000:10)->withQueryString();
-            //withTrashed()->
+            ->withTrashed()->sortable()->paginate(($type)?100000:5)->withQueryString();
+            //
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
         $data['deadline'] = empty($request->deadline) ? '' : $request->deadline; 
         $data['description'] = empty($request->description) ? '' : $request->description; 
         $data['pagination'] = $asset->isEmpty() ? 'Tiada rekod' : "Paparan ".$asset->firstItem()." hingga ".$asset->lastItem()." dari ".$asset->total();
-
-        if($excel){
+        $data['type'] = $type;
+        if($type =='excel'){
             return view('asset.export', $data);
+        }elseif($type == 'word'){
+            return view('asset.msword', $data);
+        }elseif($type == 'pdf'){
+            ///PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            $pdf = PDF::loadView('asset.msword', $data)->setPaper('a4', 'landscape');
+            return $pdf->download('Asset.pdf');
         }else{
             return view('asset.index', $data);
         }
     }
-
-    
 
      /**
      * Show the form for creating a new resource.
@@ -89,11 +93,12 @@ class AssetController extends Controller
     {
 
         //authorization using Gate
-        abort_if(Gate::denies('asset:create'), 403);
 
+        abort_if(Gate::denies('asset:create'), 403);
+        $user = Auth::user();
         //how to pass all col in table user
         //dd(auth()->user()->ministry_id);
-        $ministries = Ministry::all();
+        $ministries = Ministry::byRole($user)->get(); //using local scope
         $premises = Premise::all();
 
         $data = array();
@@ -126,7 +131,6 @@ class AssetController extends Controller
     public function show(Asset $asset)
     {
         $user = Auth::user();
-
         //route model binding
         $data = array();
         $data['asset'] = $asset->load('maps');
@@ -151,8 +155,8 @@ class AssetController extends Controller
     public function destroy(Asset $asset)
     {
 
-        //$asset->delete();
-        $asset->update(['deleted_at' => date('Y-m-d')]);
+        //$asset->delete(); totaldestroy
+        $asset->update(['deleted_at' => date('Y-m-d H:i:s')]); //using softdelete
         
         return redirect()
         ->route('asset.index')
@@ -165,7 +169,7 @@ class AssetController extends Controller
     {
 
         $data = $request->except([
-            '_token'
+            '_token','checkKnowledge'
         ]);
 
         //$fileName = time().'.'.$request->attachment->extension();  

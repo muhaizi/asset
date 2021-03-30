@@ -2,8 +2,8 @@
 
 return [
 
-    'keterangan' => 'Description',
-    'kementerian' => 'Ministry',
+    'keterangan' => 'Keterangan',
+    'kementerian' => 'Kementerian',
     'tarikh' => 'Tarikh Aset',
 
 ];

@@ -11,7 +11,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>Are you sure to delete this asset?</p>
+              <p>Adakah anda pasti untuk hapus rekod ini?</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Kembali</button>

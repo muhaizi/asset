@@ -30,6 +30,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('asset:create', function ($user) {
             return $user->hasPermission('create-asset');
         });
-      
+
+
     }
 }

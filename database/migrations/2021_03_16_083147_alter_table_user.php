@@ -15,6 +15,7 @@ class AlterTableUser extends Migration
             $table->integer('department_id')->nullable()->after('agency_id');
             $table->string('phone_number', 16)->nullable()->after('department_id');
             $table->string('status', 16)->after('phone_number')->default(1);
+            $table->softDeletes();
         });
     }
 

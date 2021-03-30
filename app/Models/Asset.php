@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use App\Observers\AssetObserver;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kyslik\ColumnSortable\Sortable;
 
 class Asset extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Sortable, HasEvents;
 
     protected $guarded = []; //inverse fillable
+    protected $count = ['ministry_id'];
+    public $sortable = ['description', 'ministry_id', 'deadline'];
 
     //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M
