@@ -41,7 +41,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Jabatan') }}</label>
 
                             <div class="col-md-6">
-                                <select name="department_id" id="department_id" class="form-control @error('department_id') is-invalid @enderror">
+                                <select name="department_id" id="department_id" data-selected-department="{{ old('department_id') }}" class="form-control @error('department_id') is-invalid @enderror">
                                     <option value="">Sila Pilih</option>
                                 </select>
                                 @error('department_id')
@@ -109,7 +109,7 @@
 
                             <div class="col-md-6">
                                 @foreach ($roles as $curRole) 
-                                        <label><input type="checkbox" name='roles[]' value="{{$curRole->id}}"> {{$curRole->display_name}}</label><BR>
+                                        <label><input type="checkbox" name='roles[]'  {{ in_array($curRole->id, old('roles', [])) ? 'checked' : '' }} value="{{$curRole->id}}"> {{$curRole->display_name}}</label><BR>
                                 @endforeach
                             </div>
                         </div>
@@ -130,7 +130,6 @@
 
 <script type='text/javascript'>
 $(document).ready(function(){
-
     updateDepartment($('#ministry_id').val());
     $('#ministry_id').on('change', function() {
         var ministryId = $(this).val();
@@ -146,12 +145,14 @@ function updateDepartment(ministryId, departmentId = 0) {
     var url = "{{ route('get.department', 0) }}";
     url = url.split('/').slice(0,-1).join('/')+'/'+ministryId;
     $.get(url, function(data){
+        var departmentId = $("#department_id").attr("data-selected-department");
+
         var departmentDropdown = $('#department_id');
         departmentDropdown.html('').append(
             $('<option>').val('').html('-Sila Pilih-')
                 );
                 
-                //console.log(data);
+                console.log(data);
                 $.each(data, function(department, id) {
                     var option = $('<option>').val(id).html(department.toUpperCase());
                         

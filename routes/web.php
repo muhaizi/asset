@@ -33,8 +33,12 @@ Route::group(
 		'middleware' => ['auth'],
 	],
 	function() {
-        Route::delete('/asset/deleteall/{asset?}', [AssetController::class, 'deleteall'])->name('asset.deleteall');
-        Route::post('/asset/updateall/{asset?}', [AssetController::class, 'approveall'])->name('asset.pengesahan');
+
+        Route::group(['prefix' => 'asset', 'as' => 'asset.'], function() {
+            Route::delete('/deleteall/{asset?}', [AssetController::class, 'deleteall'])->name('deleteall');
+            Route::post('/updateall/{asset?}', [AssetController::class, 'approveall'])->name('pengesahan');
+        });
+        
         Route::resource('/asset', AssetController::class);
 
         Route::resource('/premise', PremiseController::class);
