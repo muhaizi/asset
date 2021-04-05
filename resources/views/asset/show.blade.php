@@ -58,7 +58,7 @@
                             <div class="form-group row">
                                 <label for="description" class="col-sm-2 col-form-label">Description</label>
                                 <div class="col-sm-10">
-                                    {{$asset->description}}
+                                    {!!$asset->description!!}
                                 </div>
                             </div>
                             <div class="form-group row">

@@ -22,7 +22,7 @@ class AssetObserver
         }
         if (Auth::check()) {
             UserAction::create([
-                'user_id'      => Auth::user()->id,
+                'user_id'      => auth()->id(),
                 'action'       => $action,
                 'action_model' => $asset->getTable(),
                 'action_id'    => $asset->id,

@@ -18,9 +18,10 @@ class Asset extends Model
     protected $count = ['ministry_id'];
     //protected $with = []; always eager load , exclude $books = Book::without('author')->get();
     protected $appends = ['costs_sum_sumber'];
-    public $sortable = ['description', 'ministry_id', 'deadline', 'costs_sum_sumber'];
 
-
+    public $sortableAs = ['costs_sum_sumber'];
+    public $sortable = ['description', 'ministry_id', 'deadline'];
+    protected $casts = ['deadline' => 'date'];
 
     //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M

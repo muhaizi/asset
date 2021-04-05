@@ -45,7 +45,8 @@ class AssetController extends Controller
         $data['ministries'] = $ministries;
 
         //https://laravel.com/docs/8.x/eloquent-relationships#eager-loading
-        $asset = Asset::with('ministry')->withSum('costs', 'sumber')->withCount('costs')
+        //with  if the user belongs to a team and has a team_id as a foreign key column, then $post->user->team is empty if you don't specifiy team_id
+        $asset = Asset::with('ministry:id,name')->withSum('costs', 'sumber')->withCount('costs')
             ->when($request->name, function ($query, $name) {
                 $query->where('name', 'LIKE', '%' . $name . '%');
             })
@@ -58,13 +59,13 @@ class AssetController extends Controller
                 // business logic
             })
             //to filter by ministry if role is KAD
-            //hasRole('KAD')
+            //hasRole('KAD') hasPermission('create-asset')
             ->when($user->hasRole('KAD'), function ($query, $ministry) {
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
             })
             ->withTrashed()->sortable()->paginate(($type)?100000:5)->withQueryString();
-            //
+        //dd($asset, $ministries); //accept multiple param
         $data['asset'] = $asset;
         $data['ministry'] = empty($request->ministry_id) ? '' : $request->ministry_id; 
         $data['deadline'] = empty($request->deadline) ? '' : $request->deadline; 
@@ -132,12 +133,24 @@ class AssetController extends Controller
 
     public function show(Asset $asset)
     {
-        dd('here');
         $user = Auth::user();
-        //route model binding
+
+        //$asset::with('costs:sumber,tahun,asset_id')->get()->dd(); 
+        //get relationship with certain colum, must include FK
+        //$asset = $asset->load('asset_costs'); //lazy eager loading
 
         if($asset->trashed()){
-            dd('here');
+            //dd('here');
+            //Laravel dependency injection container will already fetch the data for you. But you have a deleted post. That's why you got a 404. So change your route to:
+
+            //Route::get('posts/deleted/{id}/edit', 'PostController@edit');
+            //And your controller to
+            
+            // public function edit($id)
+            // {
+            //     $posts = Post::withTrashed()->find($id);
+            //     return view('post.edit', compact('posts'));
+            // }
         }
         $data = array();
         $data['asset'] = $asset->load('maps');
@@ -190,7 +203,7 @@ class AssetController extends Controller
         // Filename to store
         $fileNameToStore = $filename.'_'.time().'.'.$extension;
         // Upload Image
-        //$path = $request->file('avatar')->storeAs('public/avatars',$fileNameToStore);
+        //$path = $request->file('avatar')->storeAs('avatars',$fileNameToStore);
         //Storage::disk('public')->put('uploads/' . $fileNameToStore, 'Conten');
 
         $request->attachment->move(public_path('storage/uploads'), $fileNameToStore);

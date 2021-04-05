@@ -35,7 +35,7 @@
                             <label for="description" class="col-sm-2 col-form-label">Kementerian</label>
                             <div class="col-md-8">
                                 <select name="ministry_id" id="ministry_id"
-                                class="form-control">
+                                class="custom-select">
                                 <option value="">Sila Pilih</option>
                                 @foreach ($ministries as $curMinistry)
                                     <option {{ old('ministry_id', $ministry) == $curMinistry->id ? 'selected' : '' }}
@@ -68,7 +68,7 @@
                                     <th scope="col">@sortablelink('description', 'Keterangan')</th>
                                     <th scope="col">@sortablelink('ministry_id', 'Kementerian') {!!$iconSuccess!!}</th>
                                     <th scope="col">@sortablelink('deadline', __('asset.tarikh'))</th>
-                                    <th scope="col">Total Kos</th>
+                                    <th scope="col">@sortablelink('costs_sum_sumber', 'Sumber')</th>
                                     <th scope="col">Tindakan</th>
                                 </tr>
                             </thead>

@@ -21,7 +21,7 @@
                                     <label for="premise_id">Premis</label>
                                     <div class="input-group mb-3">
                                       <select name="premise_id" id="premise_id"
-                                      class="form-control @error('premise_id') is-invalid @enderror" autofocus>
+                                      class="custom-select @error('premise_id') is-invalid @enderror" autofocus>
                                       <option value="">Sila Pilih Premis</option>
                                       @foreach ($premises as $curPremise)
                                           <option {{ old('premise_id') == $curPremise->id ? 'selected' : '' }}
@@ -65,7 +65,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label for="validationDefault04">Kementerian</label>
                                     <select name="ministry_id" id="ministry_id"
-                                        class="form-control @error('ministry_id') is-invalid @enderror" autofocus>
+                                        class="custom-select @error('ministry_id') is-invalid @enderror" autofocus>
                                         <option value="">Sila Pilih</option>
                                         @foreach ($ministries as $curMinistry)
                                             <option {{ old('ministry_id') == $curMinistry->id ? 'selected' : '' }}
@@ -99,8 +99,11 @@
                             <!--The value of a file input cannot be retained once it’s submitted and that’s the default behavior of the browser.-->
                             <div class="form-group row">
                                 <label for="inputPassword3" class="col-sm-2 col-form-label ">Lampiran</label>
-                                <div class="col-sm-10">
-                                  <input type="file" name="attachment" class="form-control-file @error('attachment') is-invalid @enderror" id="attachment" accept=".pdf,.png">
+                                <div class="col-sm-10 ">
+                                    <div class="custom-file">
+                                  <input type="file" name="attachment" class="custom-file-input @error('attachment') is-invalid @enderror" id="attachment" accept=".pdf,.png">
+                                  <label class="custom-file-label" for="customFile">Lampiran sokongan</label>
+                                    </div>
                                   @error('attachment')
                                   <span class="invalid-feedback" role="alert">
                                       <strong>{{ $message }}</strong>
@@ -193,6 +196,12 @@
             });
         });
     }); 
+
+    // Add the following code if you want the name of the file appear on select
+    $(".custom-file-input").on("change", function() {
+    var fileName = $(this).val().split("\\").pop();
+    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+    });
 
     $('#amount').keyup(function(){
           var val = $(this).val();

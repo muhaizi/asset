@@ -9,5 +9,8 @@ class AssetCost extends Model
 {
     use HasFactory;
 
+    protected $touches = ['asset']; //Touching Parent Timestamps
+
+
    
 }
