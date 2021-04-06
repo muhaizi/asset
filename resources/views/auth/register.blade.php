@@ -21,7 +21,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Kementerian') }}</label>
 
                             <div class="col-md-6">
-                                <select name="ministry_id" id="ministry_id" class="form-control @error('ministry_id') is-invalid @enderror" required autofocus>
+                                <select name="ministry_id" id="ministry_id" class="custom-select @error('ministry_id') is-invalid @enderror" required autofocus>
                                     <option value="">Sila Pilih</option>
                                     @foreach ($ministries as $curMinistry) 
                                         <option {{ old('ministry_id') == $curMinistry->id ? "selected" : "" }}  value="{{$curMinistry->id}}">{{$curMinistry->name}}</option>
@@ -41,7 +41,7 @@
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Jabatan') }}</label>
 
                             <div class="col-md-6">
-                                <select name="department_id" id="department_id" data-selected-department="{{ old('department_id') }}" class="form-control @error('department_id') is-invalid @enderror">
+                                <select name="department_id" id="department_id" data-selected-department="{{ old('department_id') }}" class="custom-select @error('department_id') is-invalid @enderror">
                                     <option value="">Sila Pilih</option>
                                 </select>
                                 @error('department_id')
@@ -109,8 +109,12 @@
 
                             <div class="col-md-6">
                                 @foreach ($roles as $curRole) 
-                                        <label><input type="checkbox" name='roles[]'  {{ in_array($curRole->id, old('roles', [])) ? 'checked' : '' }} value="{{$curRole->id}}"> {{$curRole->display_name}}</label><BR>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck{{ $loop->iteration }}" name="roles[]" value="{{$curRole->id}}" {{ in_array($curRole->id, old('roles', [])) ? 'checked' : '' }}>
+                                    <label class="custom-control-label" for="customCheck{{ $loop->iteration }}">{{$curRole->display_name}}</label>
+                                </div>
                                 @endforeach
+
                             </div>
                         </div>
 
@@ -145,7 +149,7 @@ function updateDepartment(ministryId, departmentId = 0) {
     var url = "{{ route('get.department', 0) }}";
     url = url.split('/').slice(0,-1).join('/')+'/'+ministryId;
     $.get(url, function(data){
-        var departmentId = $("#department_id").attr("data-selected-department");
+        var departmentId = $("#department_id").data("selected-department");
 
         var departmentDropdown = $('#department_id');
         departmentDropdown.html('').append(
