@@ -59,6 +59,7 @@
                                 <label for="description" class="col-sm-2 col-form-label">Description</label>
                                 <div class="col-sm-10">
                                     {!!$asset->description!!}
+                                    {{-- https://laravel.com/docs/8.x/blade#displaying-unescaped-data --}}
                                 </div>
                             </div>
                             <div class="form-group row">

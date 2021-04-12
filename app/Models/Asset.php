@@ -22,6 +22,8 @@ class Asset extends Model
     public $sortableAs = ['costs_sum_sumber'];
     public $sortable = ['description', 'ministry_id', 'deadline'];
     protected $casts = ['deadline' => 'date'];
+    protected $perPage = 10; // Yes, you can override pagination count PER MODEL (default 15)
+    const NORMAL_STATUS = 1;
 
     //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M

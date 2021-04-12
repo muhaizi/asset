@@ -30,6 +30,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::group(
 	[
+		'middleware' => ['auth', 'owner'],
+	],
+	function() {
+        Route::get('asset/{asset}', [AssetController::class, 'show'])->name('asset.show');
+    }
+);
+
+
+Route::group(
+	[
 		'middleware' => ['auth'],
 	],
 	function() {
@@ -39,7 +49,7 @@ Route::group(
             Route::post('/updateall/{asset?}', [AssetController::class, 'approveall'])->name('pengesahan');
         });
         
-        Route::resource('/asset', AssetController::class);
+        Route::resource('/asset', AssetController::class)->except('show');
 
         Route::resource('/premise', PremiseController::class);
         Route::get('asset/{asset}/map', [AssetMapController::class, 'create'])->name('map.create');
@@ -52,6 +62,8 @@ Route::group(
 
 //L8 AssetController::class
 //L7 AssetController@deleteall
+//php artisan route:cache | route:clear for production env
+
 
 Route::get('/demo', function () {
     $user = App\Models\User::with('ministry')->first();//eager load + performance wise better (using IN()) compared to lazy loading N+1 queries

@@ -78,7 +78,7 @@ class AssetController extends Controller
         }elseif($type == 'word'){
             return view('asset.msword', $data);
         }elseif($type == 'pdf'){
-            ///PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
             $pdf = PDF::loadView('asset.msword', $data)->setPaper('a4', 'landscape');
             return $pdf->download('Asset.pdf');
         }else{
@@ -120,7 +120,7 @@ class AssetController extends Controller
             ->withError('Invalid access');
         }
         
-        $ministries = Ministry::all();
+        $ministries = Ministry::all()->makeHidden('status');
         $premises = Premise::all();
 
         $data = array();
@@ -192,6 +192,7 @@ class AssetController extends Controller
             '_token','checkKnowledge'
         ]);
 
+        //$request->has('checkKnowledge'); for checkbox input
         //$fileName = time().'.'.$request->attachment->extension();  
 
         // Get filename with the extension

@@ -1,8 +1,8 @@
 @php
     $done = "<i class=\"fas fa-check-square text-success\"></i>";
     $cancel = "<i class=\"fas fa-times text-danger\"></i>";
-    $mapExists = ($asset->maps->first())?$done:$cancel;
-    $costExists = ($asset->costs->first())?"<i class=\"fas fa-check-square text-success\"></i>":"<i class=\"fas fa-times text-danger\"></i>";
+    $mapExists = ($asset->maps()->first())?$done:$cancel;
+    $costExists = ($asset->costs()->first())?"<i class=\"fas fa-check-square text-success\"></i>":"<i class=\"fas fa-times text-danger\"></i>";
 @endphp
 
 <div class="dropdown">

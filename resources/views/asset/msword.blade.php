@@ -29,7 +29,7 @@ if ($type == 'word') {
         @foreach ($asset as $curAset)
             <tr>
                 <th scope="row">{{ $loop->iteration  }}.</th>
-                <td>{{ $curAset->description }}</td>
+                <td>{!! $curAset->description !!}</td>
                 <td>{{ $curAset->ministry->name }}</td>
                 <td>{{ $curAset->deadline }}</td>
             </tr>

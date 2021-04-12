@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label for="validationDefault05">Zip</label>
-                                    <input type="number" class="form-control" id="validationDefault05" maxlength="4">
+                                    <input type="text" pattern="[0-9]+([\.,][0-9]+)?" class="form-control" id="validationDefault05" maxlength="10">
                                 </div>
                               </div>
                               <hr class="mt-0">

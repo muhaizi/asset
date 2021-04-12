@@ -152,11 +152,12 @@ function updateDepartment(ministryId, departmentId = 0) {
         var departmentId = $("#department_id").data("selected-department");
 
         var departmentDropdown = $('#department_id');
+
         departmentDropdown.html('').append(
             $('<option>').val('').html('-Sila Pilih-')
                 );
                 
-                console.log(data);
+                //console.log(data);
                 $.each(data, function(department, id) {
                     var option = $('<option>').val(id).html(department.toUpperCase());
                         

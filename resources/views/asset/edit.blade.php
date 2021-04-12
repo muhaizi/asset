@@ -16,7 +16,7 @@
                         <form action="{{ route('asset.update',[$asset->id]) }}" method="POST" enctype="multipart/form-data">
                           @method('PUT')
                           @csrf
-                          
+                          {{-- https://laravel.com/docs/8.x/routing#form-method-spoofing --}}
                           <div class="form-row">
                                 <div class="col-md-9 mb-3">
                                     <label for="validationDefault01">Premise</label>
