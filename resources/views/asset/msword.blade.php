@@ -25,7 +25,7 @@ if ($type == 'word') {
             <th scope="col">{{__('asset.tarikh')}}</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody style="background-color: #ff0000">
         @foreach ($asset as $curAset)
             <tr>
                 <th scope="row">{{ $loop->iteration  }}.</th>
