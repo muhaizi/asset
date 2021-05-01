@@ -18,14 +18,27 @@ return new class extends Migration
             $table->string('title');
             $table->char('type');
             $table->foreignId('category_id')
-                    ->nullable()
-                    ->constrained()
-                    ->onDelete('restrict');
+            ->nullable()
+            ->constrained()
+            ->onDelete('restrict');
             $table->timestamps();
 
             //->onUpdate('cascade')
             //->onDelete('cascade')
+
+            /*[CONSTRAINT [symbol]] FOREIGN KEY
+            [index_name] (col_name, ...)
+            REFERENCES tbl_name (col_name,...)
+            [ON DELETE reference_option]
+            [ON UPDATE reference_option]
+
+            reference_option:
+            RESTRICT | CASCADE | SET NULL | NO ACTION | SET DEFAULT*/
+
+            //https://dev.mysql.com/doc/refman/8.0/en/create-table-foreign-keys.html
         });
+
+        DB::statement("ALTER TABLE `categories` ADD UNIQUE( `title`, `type`, `category_id`);");
     }
 
     /**
