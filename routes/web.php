@@ -3,8 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\AssetMapController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PremiseController;
-use App\Models\AssetMap;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +28,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::resource('/category', CategoryController::class);
+Route::resource('/asset', AssetController::class)->except('show');
 Route::group(
 	[
 		'middleware' => ['auth', 'owner'],
@@ -49,14 +51,13 @@ Route::group(
             Route::post('/updateall/{asset?}', [AssetController::class, 'approveall'])->name('pengesahan');
         });
         
-        Route::resource('/asset', AssetController::class)->except('show');
-
+        
         Route::resource('/premise', PremiseController::class);
         Route::get('asset/{asset}/map', [AssetMapController::class, 'create'])->name('map.create');
         Route::get('asset/{asset}/map/{map:id}', [AssetMapController::class, 'show'])->name('map.show'); //model route binding , removing :id will effect
         Route::post('asset/{asset}/map', [AssetMapController::class, 'store'])->name('map.store');
         
-
+        
     }
 );
 
