@@ -6,6 +6,9 @@
     $ministries = \App\Models\Ministry::all();
     //dd($ministries);
     $roles = \App\Models\Role::all();
+
+    $categories = \App\Models\Category::whereNull('category_id')->whereType('STATUS')->get();
+
 @endphp
 <div class="container">
     <div class="row justify-content-center">
@@ -16,6 +19,41 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Level 1') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="lvlOne" id="lvlOne" class="custom-select @error('lvlOne') is-invalid @enderror" required autofocus>
+                                    <option value="">Sila Pilih</option>
+                                    @foreach ($categories as $category) 
+                                        <option {{ old('lvlOne') == $category->id ? "selected" : "" }}  value="{{$category->id}}">{{$category->title}}</option>
+                                    @endforeach
+
+                        
+                                </select>
+                                @error('lvlOne')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Level 2') }}</label>
+
+                            <div class="col-md-6">
+                                <select name="lvlTwo" id="lvlTwo" data-selected-department="{{ old('lvlTwo') }}" class="custom-select @error('lvlTwo') is-invalid @enderror">
+                                    <option value="">Sila Pilih</option>
+                                </select>
+                                @error('lvlTwo')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Kementerian') }}</label>
@@ -143,6 +181,15 @@ $(document).ready(function(){
             $('#department_id').html('').append($('<option>').val('').html('-Sila Pilih-'));
         }
     });
+    updateLevelTwo($('#lvlOne').val());
+    $('#lvlOne').on('change', function() {
+        var lvlOne = $(this).val();
+        if (lvlOne > 0) {
+            updateLevelTwo(lvlOne);
+        }else{
+            $('#lvlTwo').html('').append($('<option>').val('').html('-Sila Pilih-'));
+        }
+    });
 });
 
 function updateDepartment(ministryId, departmentId = 0) {
@@ -166,6 +213,31 @@ function updateDepartment(ministryId, departmentId = 0) {
                         }
                         
                         departmentDropdown.append(option);
+                    });
+                });
+            }
+
+function updateLevelTwo(lvlOneId, lvlTwoId = 0) {
+    var url = "{{ route('get.level', 0) }}";
+    url = url.split('/').slice(0,-1).join('/')+'/'+lvlOneId;
+    $.get(url, function(data){
+        var departmentId = $("#lvlTwo").data("selected-department");
+
+        var levelTwoDropdown = $('#lvlTwo');
+
+        levelTwoDropdown.html('').append(
+            $('<option>').val('').html('-Sila Pilih-')
+                );
+                
+                //console.log(data);
+                $.each(data, function(department, id) {
+                    var option = $('<option>').val(id).html(department.toUpperCase());
+                        
+                        if (departmentId == id) {
+                            option.attr('selected', 'selected');
+                        }
+                        
+                        levelTwoDropdown.append(option);
                     });
                 });
             }

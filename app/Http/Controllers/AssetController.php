@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateAsset;
 use App\Http\Requests\StoreAsset;
 use App\Models\Asset;
+use App\Models\Category;
 use App\Models\Ministry;
 use App\Models\Department;
 use App\Models\Premise;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;  //change to this from Barryvdh\DomPDF\PDF
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +33,17 @@ class AssetController extends Controller
      */
     public function index(Request $request)
     {
+
+       
+        $parts = ['apple', 'pear'];
+        $fruits = ['banana', 'orange', ...$parts, 'watermelon'];
+        dd($fruits);
+        // Get pagination information and slice the results.
+// Eager load the relation.
+//$collection = Asset::with('ministry:id,name')->withSum('costs', 'sumber')->withCount('costs');
+
         //dd(auth()->user()->role
+        //dd(auth()->user()->assets()->count());
         $user = Auth::user();
         //dd(Auth::user()->roles[0]->display_name); //dapatkan role
         //$role = Auth::user()->roles[0]->id;
@@ -58,12 +70,16 @@ class AssetController extends Controller
                     $query->where('ministry_id', $ministry_id);
                 // business logic
             })
+            // ->when('Regular', function ($query, $gotra) {
+            //         $query->where('property->batters->batter[0]->type', '=' ,$gotra);
+            // })
             //to filter by ministry if role is KAD
             //hasRole('KAD') hasPermission('create-asset')
             ->when($user->hasRole('KAD'), function ($query, $ministry) {
                 $ministry = Auth()->user()->ministry_id;
                 $query->where('ministry_id', $ministry);
             })
+            ->whereHas('costs')
             ->withTrashed()->sortable()->paginate(($type)?100000:5)->withQueryString();
         //dd($asset, $ministries); //accept multiple param
         $data['asset'] = $asset;
@@ -135,6 +151,11 @@ class AssetController extends Controller
     {
         $user = Auth::user();
 
+        // $users = DB::table('assets')
+        //         ->select('property')
+        //         ->where('property->batters->batter[0]->type', "Regular")
+        //         ->get();
+        // //dd($users, $asset->property->batters->batter[0]->type);
         //$asset::with('costs:sumber,tahun,asset_id')->get()->dd(); 
         //get relationship with certain colum, must include FK
         //$asset = $asset->load('asset_costs'); //lazy eager loading
@@ -210,6 +231,7 @@ class AssetController extends Controller
         $request->attachment->move(public_path('storage/uploads'), $fileNameToStore);
         
         $data['attachment'] = $fileNameToStore;
+        $data['created_by'] = auth()->user()->id;
         $asset = Asset::create($data);
         //$id generate next auto increment table Asset lastInsertedId()
         return redirect()
@@ -246,5 +268,18 @@ class AssetController extends Controller
         return is_null($department)
             ? ['Department not-found']
             : $department->pluck('id','name');
+    }
+
+    public function getLevel($id){
+
+        $sub = Category::whereCategoryId($id)
+            ->with('childCategories')
+            ->orderBy('title')
+            ->get();
+
+        
+        return is_null($sub)
+            ? ['Department not-found']
+            : $sub->pluck('id','title');
     }
 }

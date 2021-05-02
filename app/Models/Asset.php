@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Concerns\HasEvents;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Filesystem\Cache;
+use Illuminate\Support\Facades\Cache as FacadesCache;
 use Kyslik\ColumnSortable\Sortable;
+
 
 class Asset extends Model
 {
@@ -16,14 +19,23 @@ class Asset extends Model
 
     protected $guarded = []; //inverse fillable
     protected $count = ['ministry_id'];
+    
     //protected $with = []; always eager load , exclude $books = Book::without('author')->get();
     protected $appends = ['costs_sum_sumber'];
 
     public $sortableAs = ['costs_sum_sumber'];
     public $sortable = ['description', 'ministry_id', 'deadline'];
-    protected $casts = ['deadline' => 'date'];
+    protected $casts = ['deadline' => 'date', 
+                        'property' => 'object',
+                        'description' => 'encrypted'];
     protected $perPage = 10; // Yes, you can override pagination count PER MODEL (default 15)
     const NORMAL_STATUS = 1;
+
+     // Forget cache key on storing or updating
+     public static function boot()
+     {
+         parent::boot();
+     }
 
     //protected $with = ['map'];
     //relationship 1:1, 1:M, M:M
@@ -42,6 +54,10 @@ class Asset extends Model
     public function costs()
     {
         return $this->hasMany(AssetCost::class, 'asset_id', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function setDeadlineAttribute($value)//accessors && mutator

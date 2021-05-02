@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::get('/department/{id}', [App\Http\Controllers\AssetController::class, 'getDepartment'])->name('get.department');
+Route::get('/level/{id}', [App\Http\Controllers\AssetController::class, 'getLevel'])->name('get.level');
