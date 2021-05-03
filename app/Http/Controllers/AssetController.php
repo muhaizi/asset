@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Ministry;
 use App\Models\Department;
 use App\Models\Premise;
+use App\Models\Rating;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade as PDF;  //change to this from Barryvdh\DomPDF\PDF
 use Carbon\Carbon;
@@ -33,7 +34,11 @@ class AssetController extends Controller
      */
     public function index(Request $request)
     {
+        //hasManyThrough
+        //$rating = Rating::find(1);	
+        //$rating->answers->where('yesno', 0)->dd();
 
+        
        
         $parts = ['apple', 'pear'];
         $fruits = ['banana', 'orange', ...$parts, 'watermelon'];
